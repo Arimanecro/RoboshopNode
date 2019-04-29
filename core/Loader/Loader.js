@@ -1,3 +1,4 @@
+//process.env.NODE_PATH = '.';
 
 const path = require('path');
 
@@ -18,13 +19,18 @@ class Loader {
           }
           else { 
           if(existDestructuring) {
-            
                 partition[0] = Loader.destructuring(partition[0]);
-                console.log('less then 1', partition[0])
                 this[partition[0]] = require(`${partition[1]}`)[partition[0]]
           }
           else {
-            this[partition[0]] = require(`${partition[1]}`);
+            if(partition[1].includes('.')){
+              
+              let c = partition[1].split('.');
+              this[partition[0]] = require(`${c[0]}`)[c[1]];
+            }
+            else {
+              this[partition[0]] = require(`${partition[1]}`);
+            }
           }
           }
         }
@@ -35,14 +41,18 @@ class Loader {
             comma.forEach(v => this[v] = require(`${p}`)[v]);
           }
           else { 
-            console.log('no node less then 1');
-            //this[partition[0]] = require(`${p}`)[partition[0]];
             if(existDestructuring) {
-                               partition[0] = Loader.destructuring(partition[0]);
-                               this[partition[0]] = require(`${p}`)[partition[0]]
+              partition[0] = Loader.destructuring(partition[0]);
+              this[partition[0]] = require(`${p}`)[partition[0]]
             }
             else {
-              this[partition[0]] = require(`${p}`);
+              if(p.includes('.')){
+                let c = p.split('.');
+                this[partition[0]] = require(`${c[0]}`)[c[1]];
+              }
+              else{
+                this[partition[0]] = require(`${p}`);
+              }
             }
           }
         }
