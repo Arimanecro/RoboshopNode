@@ -4,12 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "set NODE_PATH=./core/; && node index.js"
+    "start": "set NODE_PATH=./core/;./shop/; && nodemon ./RoboshopNode && node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "mongodb": "^3.2.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.0"
   }
 }

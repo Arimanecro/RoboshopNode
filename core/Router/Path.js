@@ -1,9 +1,17 @@
-const {NodeJS} = require ('Loader');
+const {NodeJS, Loader} = require ('Loader');
 
 NodeJS.autoLoad(['http'], ['url'], ['fs'], ['path']);
 
+function destructuringWrapper(args)
+{
+    (Array.isArray(args)) && ( [req, res] = args);
+    (args.__proto__.constructor.name == 'Object') && ( {...args} );
+    return args;
+}
+
 module.exports = class Path
 {
+
     static css(req, res)
     {
         const urlFile = NodeJS.path.resolve( 'public/' + req.url);
@@ -50,11 +58,26 @@ module.exports = class Path
 
     static get(url, method, args=null)
     {
-        const {req, res} = args;
+        
+    let {req} = args;
 
-        if(req.url == url && req.method == 'GET'){
-            let parseURL = NodeJS.url.parse(url, true);
-            Path.detectTypeOfMethod(parseURL, method, args);
+    if(!NodeJS.path.extname(req.url) && req.method == 'GET'){
+            let match = Path.match(req.url, url);
+            if(Object.keys(match).length)
+            {
+                let parseURL = NodeJS.url.parse(url, true);
+                
+                Path.detectTypeOfMethod(parseURL, method, {...match, ...args});
+                //return;
+            }
+            // else {
+            //     if(!stop){
+            //         console.log(stop);
+            //     res.writeHead(404, { 'Content-Type': 'text/html' });
+            //     res.end(`<h1>Page not found</h1>`);  
+            //     }
+
+            // }
         }
     }
 
@@ -77,8 +100,33 @@ module.exports = class Path
         }
     }
 
-    static match(url, tpl)
+    static match(_url, _tpl)
     {
+        let url = _url.split('/');
+        let tpl = _tpl.split('/');
 
+        //console.log(url, tpl);
+
+        if(url.length === tpl.length){
+
+            let urls = {};
+            tpl.forEach((v,k) => {
+                if(v.includes('@')){
+                let t = Loader.trimByChar(v, '@');
+                urls[t] = url[k]
+                }
+                else {
+                    if(_tpl.length == 1 && _tpl[0] == '/') {  
+                        urls['/'] = _tpl[0];
+                    }
+                    if(v === url[k] && v != ''){
+                        urls[v] = url[k];
+                    }
+                }
+            }) ;
+            //console.log(urls)
+            return urls;
+        }
+        else { return false;}
     }
 }

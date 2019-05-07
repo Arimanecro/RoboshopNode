@@ -1,10 +1,15 @@
-const util = require('util');
-const path = require('path');
-//console.log(path.resolve('/shop/items/Home.js'))
-let t = require(path.resolve('/shop/items/Home.js'));
+chunk = (arr, size) =>
+arr.reduce(
+  (chunks, el, i) =>
+    (i % size ? chunks[chunks.length - 1].push(el) : chunks.push([el])) &&
+    chunks,
+  []
+);
 
-
-
+let a = [{name:'ariman', age:34}, {name:'baal', age:35}, {name:'lucifer', age:36}]
+let b = chunk(a, 2)
+//console.log(b)
+console.log(b.map(v => v.map(v1 => `${v1['name']}`)));
 
 // class test p.split(path.sep) ../shop/items/Home.js
 // {
