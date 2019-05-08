@@ -15,6 +15,7 @@ module.exports = class Path
     static css(req, res)
     {
         const urlFile = NodeJS.path.resolve( 'public/' + req.url);
+
         const allowedImg = ['.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg']
 
         let match = false;
@@ -66,18 +67,9 @@ module.exports = class Path
             if(Object.keys(match).length)
             {
                 let parseURL = NodeJS.url.parse(url, true);
-                
                 Path.detectTypeOfMethod(parseURL, method, {...match, ...args});
                 //return;
             }
-            // else {
-            //     if(!stop){
-            //         console.log(stop);
-            //     res.writeHead(404, { 'Content-Type': 'text/html' });
-            //     res.end(`<h1>Page not found</h1>`);  
-            //     }
-
-            // }
         }
     }
 
@@ -87,7 +79,7 @@ module.exports = class Path
         let staticMethod = method.includes('::');
 
         let m = staticMethod ? method.split("::") : method.split("->");
-        const p =  NodeJS.path.resolve(m[0]);
+        const p =  m[0]; //NodeJS.path.resolve(m[0]);
         const mod = require(`${p}.js`);
 
         if(staticMethod) {
@@ -104,8 +96,7 @@ module.exports = class Path
     {
         let url = _url.split('/');
         let tpl = _tpl.split('/');
-
-        //console.log(url, tpl);
+        let correct = false;
 
         if(url.length === tpl.length){
 
@@ -113,20 +104,29 @@ module.exports = class Path
             tpl.forEach((v,k) => {
                 if(v.includes('@')){
                 let t = Loader.trimByChar(v, '@');
-                urls[t] = url[k]
+                urls[t] = url[k];
                 }
                 else {
                     if(_tpl.length == 1 && _tpl[0] == '/') {  
                         urls['/'] = _tpl[0];
+                        correct = true;
                     }
-                    if(v === url[k] && v != ''){
+                    else if(v === url[k] && v != ''){
                         urls[v] = url[k];
+                        correct = true;
                     }
+                    else { correct = false;}
                 }
             }) ;
-            //console.log(urls)
-            return urls;
+            return correct ? urls : false;
         }
         else { return false;}
+    }
+
+    static notFound(res)
+    {
+         res.writeHead(404, { 'Content-Type': 'text/html' });
+         res.redirect('/404');
+         res.end();
     }
 }

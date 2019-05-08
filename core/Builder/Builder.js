@@ -6,9 +6,9 @@ class Builder
 {
     constructor(header, footer)
     {
-        //this.page = '';
-        //this.index =  NodeJS.path.resolve(`./core/Views/${index}.html`);
-        this.header = header ? header : NodeJS.path.resolve("./shop/Views/tpl/header.html");
+        this.header = header ? NodeJS.path.resolve("./shop/Views/tpl/headerForItem.html") 
+                             : NodeJS.path.resolve("./shop/Views/tpl/header.html");
+
         this.footer = footer ? footer : NodeJS.path.resolve("./shop/Views/tpl/footer.html");  
     }
 
@@ -22,7 +22,6 @@ class Builder
         return Promise.all([
             NodeJS.fsPromises.readFile(this.header),
             htmlTorrent,
-            //NodeJS.fsPromises.readFile(this.index),
             NodeJS.fsPromises.readFile(this.footer),
         ])
         .then(files => files.map( f => f.toString('utf-8')))

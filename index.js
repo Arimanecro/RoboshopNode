@@ -6,9 +6,10 @@ MyMod.autoLoad( ['Path->./core/Router']);
 const server = new NodeJS.Server((req, res) => {
 
   MyMod.Path.css(req, res);
-  MyMod.Path.get('/', 'shop/classes/Home->Index', {req, res});
-  MyMod.Path.get('/category/@category', 'shop/classes/Category->Index', {req, res});
-  MyMod.Path.get('/category/@category/@page', 'shop/classes/Category->Index', {req, res});
+  MyMod.Path.get('/', 'Home->Index', {req, res});
+  MyMod.Path.get('/category/@category', 'Category->Index', {req, res});
+  MyMod.Path.get('/category/@category/@page', 'Category->Index', {req, res});
+  MyMod.Path.get('/item/@name', 'Item->Index', {req, res});
   
 });
 

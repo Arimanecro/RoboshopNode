@@ -19,7 +19,7 @@ module.exports.Category = (data) => {
     data = chunk(data,4);
     return `
     </nav><main>
-    <section id="top" class="latest title_category_items">${data[0][0]['category']}</section>
+    <section id="top" class="latest title_category_items">${data[0][0]['category'].charAt(0).toUpperCase() + data[0][0]['category'].slice(1)}</section>
     ${data.map(
         v1 => `<section class="latest_wrapper category_items">
         ${v1.map(v => `<article class="latest__item">
@@ -27,7 +27,7 @@ module.exports.Category = (data) => {
            <div class="item__price">${v.price}</div>
            <a href="${v.url}">
            <div class="latest__item__desc">${v.title}</div></a>
-            <form method="post">
+            <form method="get" onsubmit='(e)=>e.preventDefault()'>
                 <input name='id' type='hidden' value='${v.id}'>
                 <input name='title' type='hidden' value='${v.title}'>
                 <input name='price' type='hidden' value='${v.price}'>
