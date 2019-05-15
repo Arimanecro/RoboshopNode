@@ -18,30 +18,15 @@
     <ul>
         <li>
             <label for="show_menu" id="check_menu"></label></li>
-        <li><a href="/wishlist"><span >Wish List</span>&nbsp;<span class="hide">[0]</span></a></li>
-        <li><a href="/basket"><span>Shopping cart</span>&nbsp;<span class="hide">[0]</span></a></li>
-        <style>
-            .nav_up ul label:before {
-                background:url(../img/arrow.png)  no-repeat, url(../img/eu.svg) no-repeat;
-                background-position: left, right;
-                background-size: auto, contain;
-            }
-            .mobile_nav ul label:before {
-                background:url(../img/arrow.png)  no-repeat, url(../img/eu.svg) no-repeat;
-                background-position: left, right;
-                background-size: auto, contain;
-            }
-        </style>
-        <label for="currency_mobile"><span>EUR</span>
+            <li><a href="/wishlist"><span>Wish List</span>&nbsp;[<span class="hide"></span>]</a></li>
+            <li id='putTwo'><a href="/basket"><span>Shopping cart</span>&nbsp;[<span class="hide"></span>]</a></li>
+        <label id="mob_abbr" for="currency_mobile"><span></span>
         </label>
     </ul>
 </nav>
 <input name="currency_mobile" type="checkbox" id="currency_mobile">
 <div class="list_currency_mobile">
-    <form method="post" id="form_currency_mobile" action="exchange">
-        <?php
-        Currency::showMenuCurrency();
-        ?>
+    <form method="post" method="POST" onsubmit="return false;" id="form_currency_mobile" action="exchange">
     </form>
 </div>
 <input name="show_menu" type="checkbox" id="show_menu">
@@ -107,29 +92,14 @@
         <nav class="nav_up">
             <ul>
                 <li><a href="">Home</a></li>
-                <li><a href="/wishlist">Wish List&nbsp;[<span></span>]</a></li>
-                <li><a href="/basket">Shopping cart&nbsp;[<span></span>]</a></li>
-                <style>
-                    .nav_up ul label:before {
-                        background:url(../img/arrow.png)  no-repeat, url(../img/eu.svg) no-repeat;
-                        background-position: left, right;
-                        background-size: auto, contain;
-                    }
-                    @media all and (max-width:401px) { .nav_up ul label:before  {background:url(../img/arrow.png) no-repeat; background-position: center; width:15px}
-                    }
-                </style>
-                <label for="currency"><span>EUR</span>
-                </label>
+                <li><a href="/wishlist"><span>Wish List</span>&nbsp;[<span class="hide"></span>]</a></li>
+                <li id='put'><a href="/basket"><span>Shopping cart</span>&nbsp;[<span class="hide"></span>]</a></li>
+                <label id="abbr" for="currency"><span></span></label>
             </ul>
-
         </nav>
         <input name="currency" type="checkbox" id="currency">
         <div class="list_currency">
-            <form method="post" id="form_currency" action="exchange">
-                <?php
-                Currency::showMenuCurrency();
-                ?>
-            </form>
+            <form method="POST" onsubmit="return false;" id="form_currency"></form>
         </div>
         <div class="application__content">
                 <nav class="menu_side" style="margin-bottom: 152px;">

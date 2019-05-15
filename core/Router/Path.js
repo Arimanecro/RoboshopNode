@@ -12,8 +12,9 @@ function destructuringWrapper(args)
 module.exports = class Path
 {
 
-    static css(req, res)
+    static mimeType(req, res)
     {
+        console.log(`MIMETYPE---${req.url}`);
         const urlFile = NodeJS.path.resolve( 'public/' + req.url);
 
         const allowedImg = ['.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg']
@@ -48,29 +49,35 @@ module.exports = class Path
                                 'Content-Length' : `${stat.size}`,
                                 });
             src.pipe(res);
-
             src.on('error', err => console.error(err))
             src.on('end', err => err ? console.error(err) : null);
         }
-        else{
-           //console.error(`Error: Unexist file --> ${urlFile}`); 
-        }
+        else { } //console.error(`Error: Unexist file --> ${urlFile}`);   
+        
     }
 
     static get(url, method, args=null)
     {
-        
-    let {req} = args;
-
-    if(!NodeJS.path.extname(req.url) && req.method == 'GET'){
-            let match = Path.match(req.url, url);
-            if(Object.keys(match).length)
-            {
-                let parseURL = NodeJS.url.parse(url, true);
-                Path.detectTypeOfMethod(parseURL, method, {...match, ...args});
-                //return;
+        let {req} = args;
+        if(!NodeJS.path.extname(req.url) && req.method == 'GET'){
+                let match = Path.match(req.url, url);
+                if(Object.keys(match).length)
+                {
+                    let parseURL = NodeJS.url.parse(url, true);
+                    Path.detectTypeOfMethod(parseURL, method, {...match, ...args});
+                    console.log(req.url)
+                    throw 'stop';
+                }
             }
-        }
+    }
+
+    static notFound(args)
+    {
+          let {res} = args;
+          const src = NodeJS.fs.createReadStream(NodeJS.path.resolve('./shop/Views/tpl/404.html'));
+          src.pipe(res);
+        //   src.on('error', err => console.error(err))
+        //   src.on('end', err => err ? console.error(err) : null);  
     }
 
     static detectTypeOfMethod(url, method, args)
@@ -79,7 +86,7 @@ module.exports = class Path
         let staticMethod = method.includes('::');
 
         let m = staticMethod ? method.split("::") : method.split("->");
-        const p =  m[0]; //NodeJS.path.resolve(m[0]);
+        const p =  m[0];// NodeJS.path.resolve(m[0]);
         const mod = require(`${p}.js`);
 
         if(staticMethod) {
@@ -107,9 +114,9 @@ module.exports = class Path
                 urls[t] = url[k];
                 }
                 else {
-                    if(_tpl.length == 1 && _tpl[0] == '/') {  
+                    if(_url.length == 1 && _url[0] == '/') {  
                         urls['/'] = _tpl[0];
-                        correct = true;
+                        correct = true;console.log(_tpl.length, '---', _tpl);
                     }
                     else if(v === url[k] && v != ''){
                         urls[v] = url[k];
@@ -123,10 +130,10 @@ module.exports = class Path
         else { return false;}
     }
 
-    static notFound(res)
+    static redirect(res)
     {
-         res.writeHead(404, { 'Content-Type': 'text/html' });
-         res.redirect('/404');
+         res.writeHead(301, { "Location": '/404' });
          res.end();
     }
+
 }

@@ -1,7 +1,7 @@
 const {NodeJS, MyMod} = require ('Loader');
 
 NodeJS.autoLoad(['url'], ['fs'],['StringDecoder->string_decoder']);
-MyMod.autoLoad(['Mongo->mongodb.MongoClient'],['Builder'],
+MyMod.autoLoad(['Mongo->mongodb.MongoClient'],['Builder'],['Path->./core/Router'],
                ['Slider, SpecialItems, LatestItems, FeaturedItems->./shop/Views/homeView']);
 
 module.exports =  class Home
@@ -20,13 +20,13 @@ module.exports =  class Home
         const {res} = args;
         if(!args.page) {args.page = 1}
 
-
-
         try {
             const Mongo = await new MyMod.Mongo('mongodb://localhost:27017/local', { useNewUrlParser: true }).connect();
             const db = await Mongo.db('local');
             //db.collection('roboshops').createIndex({ category: 1, url: 1 }, { unique: true });
             await eval(`db.collection('roboshops').${this.query}`).toArray(async (err, docs) => {
+
+            if(!docs.length) { MyMod.Path.redirect(res); return; }
             Mongo.close();
 
             let page = await new MyMod.Builder(name).HTML(this.html.map(h => h(docs)));

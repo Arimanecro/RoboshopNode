@@ -65,14 +65,14 @@ module.exports.LatestItems = (data) => {
             <span></span>
             <div class="latest__item__img" style="background:url(${v.img_medium.replace(/public/gi, "")}) no-repeat; background-size:contain; background-position:center;"></div>
            <div class="item__price">${v.price}</div>
-           <a href="${v.url}">
+           <a href="/item/${v.url}">
            <div class="latest__item__desc">${v.title}</div></a>
             <form method="post">
                 <input name='id' type='hidden' value='${v.id}'>
                 <input name='title' type='hidden' value='${v.title}'>
                 <input name='price' type='hidden' value='${v.price}'>
                 <input name='img' type='hidden' value='${v.img_small}'>
-                <input name='url' type='hidden' value='${v.url}'>
+                <input name='url' type='hidden' value='/item/${v.url}'>
                 <input name='qty' type='hidden' value='1'>
                 <input name="add_basket" type="submit" class="add_basket" value="" >
                 <input name="add_wish" type="submit" class="add_wish" value="" >
@@ -91,14 +91,14 @@ module.exports.FeaturedItems = (data) => {
             <article class="latest__item">
             <div class="latest__item__img" style="background:url(${v.img_medium.replace(/public/gi, "")}) no-repeat; background-size:contain; background-position:center;"></div>
            <div class="item__price">${v.price}</div>
-           <a href="${v.url}">
+           <a href="/item/${v.url}">
            <div class="latest__item__desc">${v.title}</div></a>
             <form method="post">
                 <input name='id' type='hidden' value='${v.id}'>
                 <input name='title' type='hidden' value='${v.title}'>
                 <input name='price' type='hidden' value='${v.price}'>
                 <input name='img' type='hidden' value='${v.img_small}'>
-                <input name='url' type='hidden' value='${v.url}'>
+                <input name='url' type='hidden' value='/item/${v.url}'>
                 <input name='qty' type='hidden' value='1'>
                 <input name="add_basket" type="submit" class="add_basket" value="" >
                 <input name="add_wish" type="submit" class="add_wish" value="" >
@@ -115,7 +115,7 @@ ${data.slice(15, 19).map(
     <span></span>
     <div class="latest__item__img" style="background:url(${v.img_medium.replace(/public/gi, "")}) no-repeat; background-size:contain; background-position:center;"></div>
    <div class="item__price">${v.price}</div>
-   <a href="${v.url}">
+   <a href="/item/${v.url}">
    <div class="latest__item__desc">${v.title}</div></a>
     <form method="post">
         <input name='id' type='hidden' value='${v.id}'>

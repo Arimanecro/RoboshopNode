@@ -15,7 +15,8 @@ module.exports.Item = (data) =>  `
             <p>Quantity <input form="add_tools" type="text" name="qty" value="1"></p>
         </div>
     </section>
-    <form method="post" id="add_tools">
+    <form method="get" onsubmit='${(e)=>e.preventDefault()}' id="add_tools" >
+        <input name='id' type='hidden' value='${data[0]['id']}'>
         <input name='title' type='hidden' value='${data[0]['title']}'>
         <input name='price' type='hidden' value='${data[0]['price']}'>
         <input name='img' type='hidden' value='${data[0]['img_small'].replace(/public/gi, "")}'>

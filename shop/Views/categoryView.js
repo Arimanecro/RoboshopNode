@@ -25,9 +25,9 @@ module.exports.Category = (data) => {
         ${v1.map(v => `<article class="latest__item">
             <div class="latest__item__img" style="background:url(${v.img_medium.replace(/public/gi, "")}) no-repeat; background-size:contain; background-position:center;"></div>
            <div class="item__price">${v.price}</div>
-           <a href="${v.url}">
+           <a href="/item/${v.url}">
            <div class="latest__item__desc">${v.title}</div></a>
-            <form method="get" onsubmit='(e)=>e.preventDefault()'>
+            <form method="get" onsubmit="(e)=>e.preventDefault()">
                 <input name='id' type='hidden' value='${v.id}'>
                 <input name='title' type='hidden' value='${v.title}'>
                 <input name='price' type='hidden' value='${v.price}'>
