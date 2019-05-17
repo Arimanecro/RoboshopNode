@@ -1,5 +1,12 @@
 class Basket
 {
+    static nameClass()
+    {
+        //Basket.prototype.constructor.name.toLowerCase();
+        let name = document.querySelector('.title_category_items');
+        return name ? name.textContent.toLowerCase() : '';
+    }
+
     static addBasket()
     {
         let addBasket = document.querySelectorAll('input[name=add_basket]');
@@ -9,9 +16,9 @@ class Basket
                 el.addEventListener('click', (e) => {
                     
                     e.preventDefault();
+                    el.setAttribute("style", "background: url(../img/adding_basket_btn.png)");
                     let parent = el.parentElement.querySelector('input[name=id]') ?
                     el.parentElement : el.parentElement.parentElement;
-
                     let childrens = {
                         'id':parent.querySelector('input[name=id]').value,
                         'title':parent.querySelector('input[name=title]').value,
@@ -23,16 +30,18 @@ class Basket
                                document.querySelector('input[name=qty]').value
                     }
                     const arr = {};
-                    const { id, price, title, img_small, url, qty } = childrens;
-                    const item = { price, title, url, img_small, qty };
+                    const { id, price, title, img, url, qty } = childrens;
+                    const item = { price, title, url, img, qty };
                     arr[id] = { ...item };
                 
                     if (!localStorage.getItem("basket")) {
                       localStorage.setItem("basket", JSON.stringify(arr));
+                      Basket.countBasket();
                     } else {
                         let parse = JSON.parse(localStorage.getItem("basket"));
                         delete parse[id];
                         localStorage.setItem("basket", JSON.stringify({ ...arr, ...parse }));
+                        Basket.countBasket();
                 };
             });
         });
@@ -47,6 +56,7 @@ class Basket
             [...addBasket].forEach(el => {
                 el.addEventListener('click', (e) => {
                     e.preventDefault();
+                    el.setAttribute("style", "background: url(../img/adding_wish_btn.png)");
                     let parent = el.parentElement.querySelector('input[name=id]') ?
                     el.parentElement : el.parentElement.parentElement;
                     let childrens = {
@@ -60,16 +70,18 @@ class Basket
                         document.querySelector('input[name=qty]').value
                     }
                     const arr = {};
-                    const { id, price, title, img_small, url, qty } = childrens;
-                    const item = { price, title, url, img_small, qty };
+                    const { id, price, title, img, url, qty } = childrens;
+                    const item = { price, title, url, img, qty };
                     arr[id] = { ...item };
                 
                     if (!localStorage.getItem("wishlist")) {
                     localStorage.setItem("wishlist", JSON.stringify(arr));
+                    Basket.countWishList();
                     } else {
                         let parse = JSON.parse(localStorage.getItem("wishlist"));
                         delete parse[id];
                         localStorage.setItem("wishlist", JSON.stringify({ ...arr, ...parse }));
+                        Basket.countWishList();
                 };
             });
         });
@@ -125,11 +137,118 @@ class Basket
         }
 
     }
+
+    static showBasketItem()
+    {
+       let items = localStorage.getItem(Basket.nameClass()) ? JSON.parse(localStorage.getItem(Basket.nameClass())) : null;
+       let wrapp = document.querySelector('.wrapp_wishlist');
+       if(items && Object.keys(items).length && wrapp)
+        {
+            let countItems = Object.keys(items);
+            let html = ``;
+            if(countItems){
+               let sum = 0;
+               countItems.forEach((v,k) => {
+                   sum += Number(items[v].price) * Number(items[v].qty);
+                   html += `
+                   <div class="wish_list__listing">
+                   <ul>
+                       <li style="background:url(${items[v].img.replace(/public/gi, "")}) no-repeat center;background-size: contain"></li>
+                       <li>${items[v].title}</li>
+                       <li>${items[v].price}</li>
+                       <input id='price' name='price' type='hidden' value='${items[v].price}'>
+                       <input name='id' type='hidden' value='${v}'>
+                       <input form="del_up" type="text" name="qty" class="qty" value="${items[v].qty}">
+                       <form method="post onsubmit="return false">
+                           <label for="del_wish${k}" class="del_wish">
+                            <input onclick="Basket.deleteItemFromBasket(${v})" name="delete" type="submit" id="del_wish${k}"></label>
+                           
+                       </form>
+                       <input form="del_up" name="${items[v].id}" type="hidden" value="${items[v].id}">
+                   </ul>
+               </div>`});
+               wrapp.innerHTML = `${html}
+               <p class="total">Total: ${sum}</p>
+               <div class="wrapp_btns">
+                <form method="post" onsubmit="return false" id="del_up" ></form>
+                <form method="post" onsubmit="return false" id="deleteall" action="basket/deleteall"></form>
+                <label for="orders" class="orders">Order<input form="del_up" type="submit" name="orders" id="orders" value=""></label>
+                <label for="del" class="del">Delete All<input onclick="Basket.deleteAll()" form="deleteall" type="submit" name="deleteAll" id="del" value=""></label>
+                <label for="update" form="del_up" class="update">Update<input onclick="Basket.updateBasket()" type="submit" form="del_up" name="put" id="update"></label>
+            </div>
+               `;
+            }
+
+        }
+        else{
+            if(document.querySelector('.wish_list'))
+            {
+                document.querySelector('.wish_list').innerHTML=`<div class="empty_wish_list">Your ${Basket.nameClass().charAt(0).toUpperCase() + Basket.nameClass().slice(1)} is Empty</div>`;
+            }
+            
+        }
+        
+    }
+
+    static updateBasket()
+    {
+        let parse = JSON.parse(localStorage.getItem(Basket.nameClass()));
+        [...document.querySelectorAll('.wish_list__listing > ul')].forEach(v => {
+            parse[v.querySelector('input[name=id]').value]['qty'] = v.querySelector('input[name=qty]').value;
+        })
+        localStorage.setItem(Basket.nameClass(), JSON.stringify(parse));
+        Basket.showBasketItem();
+        Basket.addCurrencyInBasketPage();
+    }
+
+    static deleteItemFromBasket(id)
+    {
+        let parse = JSON.parse(localStorage.getItem(Basket.nameClass()));
+        delete parse[id];
+        localStorage.setItem(Basket.nameClass(), JSON.stringify(parse));
+        Basket.countBasket();
+        Basket.showBasketItem();
+        Basket.addCurrencyInBasketPage();
+
+    }
+
+    static deleteAll()
+    {
+        localStorage.removeItem(Basket.nameClass());
+        Basket.countBasket();
+        Basket.countWishList();
+        Basket.showBasketItem();
+    }
+
+    static addCurrencyInBasketPage()
+    {
+        let divPrice = document.querySelectorAll('.wish_list__listing ul > li:nth-child(3)');
+        let sum = 0;
+        if(divPrice.length > 0){
+            [...divPrice].forEach(v => {
+              let price = Number(v.parentElement.querySelector('input[name=price]').value);
+              let qty = Number(v.parentElement.querySelector('input[name=qty]').value);
+              sum += Number(price) * Number(qty);
+               v.textContent = String(( price * JSON.parse(localStorage.getItem("currency"))["rate"]).toFixed(2)) +
+            " " + Currency.decodeHTML(Currency.getSymbol()) })
+           
+            document.querySelector('.total').textContent = 'Total: ' + String(( sum * JSON.parse(localStorage.getItem("currency"))["rate"]).toFixed(2)) +
+          " " + Currency.decodeHTML(Currency.getSymbol());
+        }
+
+    }
+
+    static go()
+    {
+        Basket.countBasket();
+        Basket.countWishList();
+        Basket.showBasketItem(); 
+        Basket.btnBasketBg();
+        Basket.btnWishListBg();
+        Basket.addBasket();
+        Basket.addWishList();
+        Basket.addCurrencyInBasketPage();
+    }
 }
 
-Basket.countBasket();
-Basket.countWishList();
-Basket.btnBasketBg();
-Basket.btnWishListBg();
-Basket.addBasket();
-Basket.addWishList();
+Basket.go();

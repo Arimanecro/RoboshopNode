@@ -70,7 +70,7 @@ module.exports.LatestItems = (data) => {
             <form method="post">
                 <input name='id' type='hidden' value='${v.id}'>
                 <input name='title' type='hidden' value='${v.title}'>
-                <input name='price' type='hidden' value='${v.price}'>
+                <input id='price' name='price' type='hidden' value='${v.price}'>
                 <input name='img' type='hidden' value='${v.img_small}'>
                 <input name='url' type='hidden' value='/item/${v.url}'>
                 <input name='qty' type='hidden' value='1'>

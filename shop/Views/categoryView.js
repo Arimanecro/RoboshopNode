@@ -30,7 +30,7 @@ module.exports.Category = (data) => {
             <form method="get" onsubmit="(e)=>e.preventDefault()">
                 <input name='id' type='hidden' value='${v.id}'>
                 <input name='title' type='hidden' value='${v.title}'>
-                <input name='price' type='hidden' value='${v.price}'>
+                <input id='price' name='price' type='hidden' value='${v.price}'>
                 <input name='img' type='hidden' value='${v.img_small}'>
                 <input name='url' type='hidden' value='${v.url}'>
                 <input name='qty' type='hidden' value='1'>
@@ -46,6 +46,6 @@ module.exports.Category = (data) => {
         </ul>
       </div>
     <section class="latest_wrapper bestsellers_wraper latest_featured" style="display:block;margin-bottom: 330px;"></section>
-    `;
+    `.replace(/[, ]+/g, ' ');
 }
 

@@ -1,6 +1,6 @@
 const {NodeJS, MyMod} = require ('Loader');
 
-NodeJS.autoLoad(['url'], ['fs'],['StringDecoder->string_decoder']);
+NodeJS.autoLoad(['url'], ['fs']);
 MyMod.autoLoad(['Mongo->mongodb.MongoClient'],['Builder'],['Path->./core/Router'],
                ['Slider, SpecialItems, LatestItems, FeaturedItems->./shop/Views/homeView']);
 

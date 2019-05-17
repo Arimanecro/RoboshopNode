@@ -48,6 +48,8 @@ class Currency  {
       "currency",
       JSON.stringify({ name: n, rate: rate ? rate : 1 })
     );
+      Currency.go(true);
+      Basket.addCurrencyInBasketPage();
   }
 
   static checkCurrency() {
@@ -98,17 +100,22 @@ class Currency  {
     return {'flag':flag, 'abbr':name};
   }
 
-  static currencyPrice() {
+  static currencyPrice(click=false)
+  {
     let divPrice = document.querySelectorAll('.item__price');
     if(divPrice){
       [...divPrice].forEach(v => {
-         v.textContent = String((v.textContent * JSON.parse(localStorage.getItem("currency"))["rate"]).toFixed(2)) +
+        let price = click ? document.querySelector('#price').value : v.textContent.split(' ')[0];
+         v.textContent = String(( price * JSON.parse(localStorage.getItem("currency"))["rate"]).toFixed(2)) +
       " " + Currency.decodeHTML(Currency.getSymbol()) })
     }
+
     let price = document.querySelector('.item_block__params h2');
+  
     if(price)
     {
-      price.textContent = String((price.textContent * JSON.parse(localStorage.getItem("currency"))["rate"]).toFixed(2)) +
+      let p= click ? document.querySelector('#price').value : price.textContent.split(' ')[0];
+      price.textContent = String((p * JSON.parse(localStorage.getItem("currency"))["rate"]).toFixed(2)) +
       " " + Currency.decodeHTML(Currency.getSymbol());
     }
   }
@@ -130,48 +137,26 @@ static decodeHTML(c)
   return entities[c];
 }
 
-static appendAfter()
-{
-  let content = `
-  .nav_up ul label:before {
-    background:url(../img/arrow.png)  no-repeat, url(../img/${Currency.flag()['flag']}) no-repeat;
+  static elBg()
+  {
+    return `background:url(../img/arrow.png)  no-repeat, url(../img/${Currency.flag()['flag']}) no-repeat;
     background-position: left, right;
     background-size: auto, contain;
-}
-.mobile_nav ul label:before {
-    background:url(../img/arrow.png)  no-repeat, url(../img/${Currency.flag()['flag']}) no-repeat;
-    background-position: left, right;
-    background-size: auto, contain;
-  `;
-  let contentTwo = `
-  .nav_up ul label:before {
-    background:url(../img/arrow.png)  no-repeat, url(../img/${Currency.flag()['flag']}) no-repeat;                    
-    background-position: left, right;
-    background-size: auto, contain;
-}
-@media all and (max-width:401px) { .nav_up ul label:before  {background:url(../img/arrow.png) no-repeat; background-position: center; width:15px}
-}
-  `;
-  let element = document.getElementById('put');
-  let elementTwo = document.getElementById('putTwo')
-  
-  let newElement = document.createElement('style');
-  newElement.appendChild(document.createTextNode(content));
-  let elementParent = element.parentNode;
-  elementParent.insertBefore(newElement, element.nextSibling);
+    `;
+  }
 
-  let newElement2 = document.createElement('style');
-  newElement2.appendChild(document.createTextNode(contentTwo));
-  let elementParent2 = elementTwo.parentNode;
-  elementParent2.insertBefore(newElement2, elementTwo.nextSibling);
-}
+  static go(click=false)
+  {
+    document.getElementById('form_currency').innerHTML=Currency.showMenuCurrency();
+    document.getElementById('form_currency_mobile').innerHTML=Currency.showMenuCurrency();
+    document.querySelector('#abbr > span').textContent = Currency.flag()['abbr'];
+    document.querySelector('#abbr > div').setAttribute('style', `${Currency.elBg()}`);
+    document.querySelector('#mob_abbr > span').textContent = Currency.flag()['abbr'];
+    document.querySelector('#mob_abbr > div').setAttribute('style', `${Currency.elBg()}`);
+    Currency.currencyPrice(click);
+  }
 
 }
+
 Currency.checkCurrency();
-Currency.appendAfter();
-
-document.getElementById('form_currency').innerHTML=Currency.showMenuCurrency();
-document.getElementById('form_currency_mobile').innerHTML=Currency.showMenuCurrency();
-document.querySelector('#abbr > span').textContent = Currency.flag()['abbr'];
-document.querySelector('#mob_abbr > span').textContent = Currency.flag()['abbr'];
-Currency.currencyPrice();
+Currency.go();

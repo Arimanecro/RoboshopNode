@@ -17,7 +17,7 @@ class Builder
         //let path = NodeJS.path.resolve(`./core/shop/items/test.html`);
 
         let htmlTorrent = '';
-        html.map(el => htmlTorrent += el);
+        html ? html.map(el => htmlTorrent += el) : null;
 
         return Promise.all([
             NodeJS.fsPromises.readFile(this.header),

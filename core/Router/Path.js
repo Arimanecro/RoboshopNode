@@ -1,6 +1,6 @@
 const {NodeJS, Loader} = require ('Loader');
 
-NodeJS.autoLoad(['http'], ['url'], ['fs'], ['path']);
+NodeJS.autoLoad(['http'], ['fs'], ['path']);
 
 function destructuringWrapper(args)
 {
@@ -14,7 +14,7 @@ module.exports = class Path
 
     static mimeType(req, res)
     {
-        console.log(`MIMETYPE---${req.url}`);
+        //console.log(`MIMETYPE---${req.url}`);
         const urlFile = NodeJS.path.resolve( 'public/' + req.url);
 
         const allowedImg = ['.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg']
@@ -58,17 +58,39 @@ module.exports = class Path
 
     static get(url, method, args=null)
     {
-        let {req} = args;
-        if(!NodeJS.path.extname(req.url) && req.method == 'GET'){
+        
+        let {req, matchURL} = args;
+        if(req.method == 'GET'){
                 let match = Path.match(req.url, url);
                 if(Object.keys(match).length)
-                {
-                    let parseURL = NodeJS.url.parse(url, true);
-                    Path.detectTypeOfMethod(parseURL, method, {...match, ...args});
-                    console.log(req.url)
+                {console.log(method);
+                    //let parseURL = NodeJS.url.parse(url, true);
+                    Path.detectTypeOfMethod( method, {...match, ...args});
+                    matchURL.url = true;
                     throw 'stop';
                 }
             }
+    }
+
+    static post(url, method, args=null)
+    {
+        let {req, res} = args;
+        if(req.method == 'POST'){
+            req.on('data', function (data) {
+                //console.log(data.toString());
+                let POST = {};
+                data = data.toString();
+            data = data.split('&');
+            for (var i = 0; i < data.length; i++) {
+                var _data = data[i].split("=");
+                POST[_data[0]] = _data[1];
+            }
+            console.log(POST);
+                res.writeHead(200, "OK", {'Content-Type': 'application/json'});
+                res.end(`${data.toString()}`);
+            });
+        }
+
     }
 
     static notFound(args)
@@ -76,12 +98,14 @@ module.exports = class Path
           let {res} = args;
           const src = NodeJS.fs.createReadStream(NodeJS.path.resolve('./shop/Views/tpl/404.html'));
           src.pipe(res);
+          throw 'stop';
         //   src.on('error', err => console.error(err))
         //   src.on('end', err => err ? console.error(err) : null);  
     }
 
-    static detectTypeOfMethod(url, method, args)
+    static detectTypeOfMethod(method, args)
     {
+        
         let storage = {};
         let staticMethod = method.includes('::');
 
@@ -114,15 +138,17 @@ module.exports = class Path
                 urls[t] = url[k];
                 }
                 else {
-                    if(_url.length == 1 && _url[0] == '/') {  
-                        urls['/'] = _tpl[0];
-                        correct = true;console.log(_tpl.length, '---', _tpl);
+                    if(_url == '/' && _tpl == '/') {  
+                        urls['/'] = _tpl;
+                        correct = true;
                     }
                     else if(v === url[k] && v != ''){
                         urls[v] = url[k];
                         correct = true;
                     }
-                    else { correct = false;}
+                    else { 
+                        correct = false;
+                    }
                 }
             }) ;
             return correct ? urls : false;
@@ -134,6 +160,11 @@ module.exports = class Path
     {
          res.writeHead(301, { "Location": '/404' });
          res.end();
+    }
+
+    static incorrectURL(url, res)
+    {
+        return url ? null : Path.redirect(res);
     }
 
 }

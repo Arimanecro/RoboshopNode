@@ -11,15 +11,22 @@ const server = new NodeJS.Server((req, res) => {
   }
   else {
       try {
-      
-      MyMod.Path.get('/', 'Home->Index', {req, res});
-      MyMod.Path.get('/category/@category', 'Category->Index', {req, res});
-      MyMod.Path.get('/category/@category/@page', 'Category->Index', {req, res});
-      MyMod.Path.get('/item/@name', 'Item->Index', {req, res});
-      MyMod.Path.get('/404', 'Path::notFound', {req, res});
-      
+      let matchURL = {url:false};
+
+// == Paths ==
+
+      MyMod.Path.get('/', 'Home->Index', {req, res, matchURL});
+      MyMod.Path.get('/category/@category', 'Category->Index', {req, res, matchURL});
+      MyMod.Path.get('/category/@category/@page', 'Category->Index', {req, res, matchURL});
+      MyMod.Path.get('/item/@name', 'Item->Index', {req, res, matchURL});
+      MyMod.Path.get('/basket', 'Basket::Index', {req, res, matchURL, "class":"Basket"});
+      MyMod.Path.get('/wishlist', 'Basket::Index', {req, res, matchURL, "class":"Wishlist"});
+      MyMod.Path.get('/404', 'Path::notFound', {req, res, matchURL});
+
+// == Detecting incorrect paths ==
+      MyMod.Path.incorrectURL(matchURL.url, res);
   }
-  catch(e) {console.log(e)}
+  catch(e) {console.error(e)}
   }
 });
 

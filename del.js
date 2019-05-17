@@ -1,16 +1,12 @@
-function go()
-{
-  console.log('hahah')
-  //throw 'stop';
-}
-try {
-  go();
-go();
-}
-catch(e){
-  console.log(e)
-}
+class test { 
+  static go() { return test.prototype.constructor.name; } 
+  static show() {console.log(`My name is ${test.go()}`)} }
 
+  class two extends test{
+    static go() { return two.prototype.constructor.name; } 
+  }
+
+  two.go();
 
 
 

@@ -14,16 +14,15 @@
     <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-    <nav class="mobile_nav">
-        <ul>
-            <li>
-                <label for="show_menu" id="check_menu"></label></li>
-                <li><a href="/wishlist"><span>Wish List</span>&nbsp;[<span class="hide"></span>]</a></li>
-                <li id='putTwo'><a href="/basket"><span>Shopping cart</span>&nbsp;[<span class="hide"></span>]</a></li>
-            <label id="mob_abbr" for="currency_mobile"><span></span>
-            </label>
-        </ul>
-    </nav>
+<nav class="mobile_nav">
+            <ul>
+                <li>
+                    <label for="show_menu" id="check_menu"></label></li>
+                    <li><a href="/wishlist"><span>Wish List</span>&nbsp;[<span class="hide"></span>]</a></li>
+                    <li id='putTwo'><a href="/basket"><span>Shopping cart</span>&nbsp;[<span class="hide"></span>]</a></li>
+                <label style="display:flex;" id="mob_abbr" for="currency_mobile"><div></div><span></span></label>
+            </ul>
+        </nav>
 <input name="currency_mobile" type="checkbox" id="currency_mobile">
 <div class="list_currency_mobile">
     <form  method="POST" onsubmit="return false;"  id="form_currency_mobile" action="exchange">
@@ -82,16 +81,18 @@
             </section>
             <section class="phone"><span>111-222-333</span></section>
         </header>
-
         <nav class="nav_up" style="width:100%;">
-            <ul>
-                <li><a href="">Home</a></li>
-                <li><a href="/wishlist"><span>Wish List</span>&nbsp;[<span class="hide"></span>]</a></li>
-                <li id='put'><a href="/basket"><span>Shopping cart</span>&nbsp;[<span class="hide"></span>]</a></li>
-                <label id="abbr" for="currency"><span></span></label>
-            </ul>
-
-        </nav>
+                <ul>
+                    <li><a href="">Home</a></li>
+                    <li><a href="/wishlist"><span>Wish List</span>&nbsp;[<span class="hide"></span>]</a></li>
+                    <li id='put'><a href="/basket"><span>Shopping cart</span>&nbsp;[<span class="hide"></span>]</a></li>
+                    <style>
+                    @media all and (max-width:401px) { .nav_up ul label:before  {background:url(../img/arrow.png) no-repeat; background-position: center; width:15px}}
+                    </style>
+                    <label style="display:flex;" id="abbr" for="currency"><div></div><span></span>
+                    </label>
+                </ul>
+            </nav>
         <input name="currency" type="checkbox" id="currency">
         <div class="list_currency">
             <form method="POST" onsubmit="return false;" id="form_currency"></form>
