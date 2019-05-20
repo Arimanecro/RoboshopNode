@@ -13,7 +13,6 @@ class Loader {
         if(partition[1][0] !== '.' )
         {
           if(comma.length > 1){
-            //console.log('more then 1')
               comma.forEach(v => this[v] = require(`${partition[1]}`)[v]);
           }
           else { 
@@ -59,8 +58,9 @@ class Loader {
             }
           }
         }
+        
       });
-    });
+    });console.log(this.partition);
   }
 
   static destructuring(string)

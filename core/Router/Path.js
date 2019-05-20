@@ -1,6 +1,6 @@
 const {NodeJS, Loader} = require ('Loader');
 
-NodeJS.autoLoad(['http'], ['fs'], ['path']);
+NodeJS.autoLoad(['http'], ['fs'], ['path'], ['urldecode']);
 
 function destructuringWrapper(args)
 {
@@ -58,13 +58,11 @@ module.exports = class Path
 
     static get(url, method, args=null)
     {
-        
         let {req, matchURL} = args;
         if(req.method == 'GET'){
                 let match = Path.match(req.url, url);
                 if(Object.keys(match).length)
-                {console.log(method);
-                    //let parseURL = NodeJS.url.parse(url, true);
+                {
                     Path.detectTypeOfMethod( method, {...match, ...args});
                     matchURL.url = true;
                     throw 'stop';
@@ -74,23 +72,27 @@ module.exports = class Path
 
     static post(url, method, args=null)
     {
-        let {req, res} = args;
+        let {req, res, matchURL} = args;
         if(req.method == 'POST'){
-            req.on('data', function (data) {
-                //console.log(data.toString());
-                let POST = {};
-                data = data.toString();
-            data = data.split('&');
-            for (var i = 0; i < data.length; i++) {
-                var _data = data[i].split("=");
-                POST[_data[0]] = _data[1];
+            let match = Path.match(req.url, url);
+            if(Object.keys(match).length)
+            {
+              req.on('data', (data) => { 
+                  //console.log(NodeJS.urldecode(data.toString()));
+              let POST = {};
+              data = NodeJS.urldecode(data.toString()); //data.toString()
+              data = data.split('&');
+                for (let i = 0; i < data.length; i++) {
+                    let _data = data[i].split("=");
+                    POST[_data[0]] = _data[1];
+                }
+                //console.log(POST);
+                Path.detectTypeOfMethod( method, {...match, ...args, ...POST});
+                matchURL.url = true;
+              });
+              throw 'stop';
             }
-            console.log(POST);
-                res.writeHead(200, "OK", {'Content-Type': 'application/json'});
-                res.end(`${data.toString()}`);
-            });
         }
-
     }
 
     static notFound(args)
@@ -99,8 +101,6 @@ module.exports = class Path
           const src = NodeJS.fs.createReadStream(NodeJS.path.resolve('./shop/Views/tpl/404.html'));
           src.pipe(res);
           throw 'stop';
-        //   src.on('error', err => console.error(err))
-        //   src.on('end', err => err ? console.error(err) : null);  
     }
 
     static detectTypeOfMethod(method, args)

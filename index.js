@@ -21,6 +21,8 @@ const server = new NodeJS.Server((req, res) => {
       MyMod.Path.get('/item/@name', 'Item->Index', {req, res, matchURL});
       MyMod.Path.get('/basket', 'Basket::Index', {req, res, matchURL, "class":"Basket"});
       MyMod.Path.get('/wishlist', 'Basket::Index', {req, res, matchURL, "class":"Wishlist"});
+      MyMod.Path.get('/order', 'Order::Index', {req, res, matchURL});
+      MyMod.Path.post('/order', 'Order::Index', {req, res, matchURL});
       MyMod.Path.get('/404', 'Path::notFound', {req, res, matchURL});
 
 // == Detecting incorrect paths ==

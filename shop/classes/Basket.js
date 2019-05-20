@@ -7,7 +7,6 @@ module.exports =  class Basket
 {
     static Index(args)
     {
-        
         const {res} = args;
         try{
         let page = new MyMod.Builder(true).HTML([MyMod.BasketView(args.class)]);

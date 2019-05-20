@@ -1,14 +1,20 @@
-class test { 
-  static go() { return test.prototype.constructor.name; } 
-  static show() {console.log(`My name is ${test.go()}`)} }
-
-  class two extends test{
-    static go() { return two.prototype.constructor.name; } 
-  }
-
-  two.go();
 
 
+class fff {
+  static test()
+{
+  console.log(fff.kkk)
+}
+
+static lala()
+{
+  fff.kkk = 888;
+  fff.test();
+}
+}
+
+
+fff.lala();
 
 // class test p.split(path.sep) ../shop/items/Home.js
 // {
