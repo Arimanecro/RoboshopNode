@@ -172,7 +172,7 @@ class Basket
                <div class="wrapp_btns">
                 <form method="post" onsubmit="return false" id="del_up" ></form>
                 <form method="post" onsubmit="return false" id="deleteall" action="basket/deleteall"></form>
-                <label for="orders" class="orders">Order<input form="del_up" type="submit" name="orders" id="orders" value=""></label>
+                <a href='order' class="orders">Order</a>
                 <label for="del" class="del">Delete All<input onclick="Basket.deleteAll()" form="deleteall" type="submit" name="deleteAll" id="del" value=""></label>
                 <label for="update" form="del_up" class="update">Update<input onclick="Basket.updateBasket()" type="submit" form="del_up" name="put" id="update"></label>
             </div>

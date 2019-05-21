@@ -3,26 +3,24 @@ const {NodeJS, MyMod} = require ('Loader');
 NodeJS.autoLoad(['url'], ['fs']);
 MyMod.autoLoad(['Builder'], 
                ['SimpleCrypto->simple-crypto-js.default'],
+               ['Mongo->mongodb.MongoClient'],
                ['urldecode'],
                ['orderView->./shop/Views/orderView']);
 
 module.exports =  class Order
 {
-    static Index(args)
+    static async Index(args)
     {
-        const {res, req, name, address, email, captcha, captchaImg} = args;
+        const {res, req, name, address, email, captcha, captchaImg, ids} = args;
+
         args.captcha = Order.generate();
         args.errors = Order.validation(req, {name, address, email, captcha, captchaImg});
-        args.good = Order.good ? Order.good : false;
-        
-        //Object.keys(args).map(v => args[v] = MyMod.urldecode(args[v]));
-        //console.log(args);
+        args.good = Order.good ? Order.insertOrder(ids, {name, address, email}) : false;
+
         try{
-        let page = new MyMod.Builder(true).HTML([MyMod.orderView(args)]);
-        page.then(p => {
-           res.writeHead(200, { 'Content-Type': 'text/html' });
-           res.end(`${p}`); 
-        })
+        let page = await new MyMod.Builder(true).HTML([MyMod.orderView(args)]);
+        await res.writeHead(200, { 'Content-Type': 'text/html' });
+        await res.end(`${page}`); 
         }
         catch(e) {
             res.writeHead(500, { 'Content-Type': 'text/html' });
@@ -30,6 +28,47 @@ module.exports =  class Order
             console.error(e);
         }
     }
+
+    static async insertOrder(ids, userInfo)
+    {
+      if(ids){
+       let qtyItem = {}
+       let idItem = [];
+       let successInsert = false;
+       
+       JSON.parse(ids).map(v => {
+         idItem.push(Number(v.split(',')[0]));
+         qtyItem[v.split(',')[0]] = v.split(',')[1];
+        });
+
+       const Mongo = await new MyMod.Mongo('mongodb://localhost:27017/local', { useNewUrlParser: true }).connect();
+       const db = await Mongo.db('local');
+       await db.collection('roboshops').find({id:{$in:idItem}})
+                                       .project({'id':1, 'title':1, 'price':1})
+                                       .toArray(async (err, docs) => {
+            if(docs)
+            {
+              userInfo.items = [];
+              userInfo.total = 0;
+              docs.map(v => { userInfo.items.push({'id':v.id, 
+                                                   'title': v.title, 
+                                                   'price': v.price,
+                                                   'qty': qtyItem[v.id]});
+                                                   userInfo.total += Number(v.price) * Number(qtyItem[v.id]).toFixed(2);
+                                                  });
+            db.collection('orders').insertOne(userInfo, function(err, r) {
+              if(err) { throw new Error(err)}
+              //console.log('insertGood');
+              Order.good = null;
+              Mongo.close();
+              return r.insertedCount ? (successInsert = true) : false;
+            });
+          }
+      });
+      return successInsert;
+    }
+    return false;
+  }
 
     static validation(req, data)
     {

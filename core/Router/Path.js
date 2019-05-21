@@ -86,7 +86,6 @@ module.exports = class Path
                     let _data = data[i].split("=");
                     POST[_data[0]] = _data[1];
                 }
-                //console.log(POST);
                 Path.detectTypeOfMethod( method, {...match, ...args, ...POST});
                 matchURL.url = true;
               });
