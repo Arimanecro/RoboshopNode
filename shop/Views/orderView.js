@@ -1,5 +1,5 @@
 module.exports = (data) =>   
-`${(Object.keys(data.errors).length > 0) ? 
+`   ${(Object.keys(data.errors).length > 0) ? 
          `<div class='errors'>
           <p>ERRORS:</p>
             ${data.errors.map( v => `<p>${v}</p>`)}
@@ -10,7 +10,7 @@ ${data.good ? `<div class="errors no_errors">
 </div>
 <script>localStorage.removeItem('basket')</script>
 ${
-    data.name='', data.address = '', data.email='' 
+    data.name='', data.address = '', data.email='', data.good=''
 }`  : ''}
     <div class="wrapp_order">
     <div class="robo_order"></div>
@@ -33,6 +33,6 @@ if(localStorage.getItem("basket"))
  let ids = JSON.parse(localStorage.getItem("basket"));
  let string = JSON.stringify(Object.keys(ids).map((v) => v + ',' + ids[v]['qty']));
  document.querySelector('input[name=ids').value=string;   
-}
+}   
 </script>
 `;

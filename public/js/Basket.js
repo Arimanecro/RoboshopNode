@@ -106,10 +106,7 @@ class Basket
     {
         if(localStorage.getItem("basket"))
         {
-            // console.log(document.querySelectorAll('input[name="add_basket"]')[0]
-            // .parentElement.localName);
         [...document.querySelectorAll('input[name="add_basket"]')].forEach( (v) => {
-            //console.log(v.parentElement);
             if(v.parentElement.localName !== 'label'){
                if(Object.keys(JSON.parse(localStorage.getItem("basket")))
                .includes(String(v.parentElement.querySelector('input[name=id]').value)))
@@ -162,7 +159,6 @@ class Basket
                        <form method="post onsubmit="return false">
                            <label for="del_wish${k}" class="del_wish">
                             <input onclick="Basket.deleteItemFromBasket(${v})" name="delete" type="submit" id="del_wish${k}"></label>
-                           
                        </form>
                        <input form="del_up" name="${items[v].id}" type="hidden" value="${items[v].id}">
                    </ul>
@@ -178,14 +174,12 @@ class Basket
             </div>
                `;
             }
-
         }
         else{
             if(document.querySelector('.wish_list'))
             {
                 document.querySelector('.wish_list').innerHTML=`<div class="empty_wish_list">Your ${Basket.nameClass().charAt(0).toUpperCase() + Basket.nameClass().slice(1)} is Empty</div>`;
             }
-            
         }
         
     }

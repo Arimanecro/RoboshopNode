@@ -14,7 +14,6 @@ class Builder
 
     HTML(html)
     {
-        //let path = NodeJS.path.resolve(`./core/shop/items/test.html`);
 
         let htmlTorrent = '';
         html ? html.map(el => htmlTorrent += el) : null;

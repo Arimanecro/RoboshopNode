@@ -1,5 +1,5 @@
 module.exports.Slider = () => {
-    return `
+  return `
         <section class="slider_mobile">
         <ul class="rslides">
             <li>
@@ -40,30 +40,42 @@ module.exports.Slider = () => {
         </ul>
     </section>
         `;
-}
+};
 
-module.exports.SpecialItems = (data) => {
-    return `
+module.exports.SpecialItems = data => {
+  return `
         <div class="specials">Specials</div>
-        ${data.slice(26, 30).map(
+        ${data
+          .slice(26, 30)
+          .map(
             v => `
             <article class=\"item_special\">
             <span class=\"sale\"></span>
-            <div class=\"item__img\" style=\"background: url(${v.img_small.replace(/public/gi, "")}) no-repeat; background-size: contain;\"></div>
+            <div class=\"item__img\" style=\"background: url(${v.img_small.replace(
+              /public/gi,
+              ""
+            )}) no-repeat; background-size: contain;\"></div>
             <div class=\"item__desc\"><a href=item/${v.url}>${v.title}</a></div>
             <div class=\"item__price\">${v.price}</div>
-        </article>`).join('')}
+        </article>`
+          )
+          .join("")}
             </nav><main>`;
-}
+};
 
-module.exports.LatestItems = (data) => {
-    return `<section class="latest">Latest</section>
+module.exports.LatestItems = data => {
+  return `<section class="latest">Latest</section>
     <section class="latest_wrapper ">
-    ${data.slice(0, 4).map(
+    ${data
+      .slice(0, 4)
+      .map(
         v => `
        <article class="latest__item">
             <span></span>
-            <div class="latest__item__img" style="background:url(${v.img_medium.replace(/public/gi, "")}) no-repeat; background-size:contain; background-position:center;"></div>
+            <div class="latest__item__img" style="background:url(${v.img_medium.replace(
+              /public/gi,
+              ""
+            )}) no-repeat; background-size:contain; background-position:center;"></div>
            <div class="item__price">${v.price}</div>
            <a href="/item/${v.url}">
            <div class="latest__item__desc">${v.title}</div></a>
@@ -78,18 +90,25 @@ module.exports.LatestItems = (data) => {
                 <input name="add_wish" type="submit" class="add_wish" value="" >
             </form>
         </article>
-    `).join('')}
+    `
+      )
+      .join("")}
     </section>`;
-}
+};
 
-module.exports.FeaturedItems = (data) => {
-    return `
+module.exports.FeaturedItems = data => {
+  return `
         <section class="latest" style="margin-top: 38px;">Featured</section>
 <section class="latest_wrapper dvesti featured latest_featured">
-        ${data.slice(15, 19).map(
+        ${data
+          .slice(15, 19)
+          .map(
             v => `           
             <article class="latest__item">
-            <div class="latest__item__img" style="background:url(${v.img_medium.replace(/public/gi, "")}) no-repeat; background-size:contain; background-position:center;"></div>
+            <div class="latest__item__img" style="background:url(${v.img_medium.replace(
+              /public/gi,
+              ""
+            )}) no-repeat; background-size:contain; background-position:center;"></div>
            <div class="item__price">${v.price}</div>
            <a href="/item/${v.url}">
            <div class="latest__item__desc">${v.title}</div></a>
@@ -103,17 +122,24 @@ module.exports.FeaturedItems = (data) => {
                 <input name="add_basket" type="submit" class="add_basket" value="" >
                 <input name="add_wish" type="submit" class="add_wish" value="" >
             </form>
-        </article>`).join('')}
+        </article>`
+          )
+          .join("")}
 </section>
 <section class="latest specials_mq" style="margin-top: 30px;">
 Special
 </section>
 <section class="latest_wrapper bestsellers_wraper special_wrapp">
-${data.slice(15, 19).map(
+${data
+  .slice(15, 19)
+  .map(
     v => `
     <article class="latest__item">
     <span></span>
-    <div class="latest__item__img" style="background:url(${v.img_medium.replace(/public/gi, "")}) no-repeat; background-size:contain; background-position:center;"></div>
+    <div class="latest__item__img" style="background:url(${v.img_medium.replace(
+      /public/gi,
+      ""
+    )}) no-repeat; background-size:contain; background-position:center;"></div>
    <div class="item__price">${v.price}</div>
    <a href="/item/${v.url}">
    <div class="latest__item__desc">${v.title}</div></a>
@@ -128,8 +154,10 @@ ${data.slice(15, 19).map(
         <input name="add_wish" type="submit" class="add_wish" value="" >
     </form>
 </article>
-    `).join('')}
+    `
+  )
+  .join("")}
 </section>
 <section class="latest_wrapper bestsellers_wraper latest_featured" style="margin-bottom: 330px;">
 </section>`;
-}
+};

@@ -13,15 +13,16 @@ module.exports =  class Order
     {
         const {res, req, name, address, email, captcha, captchaImg, ids} = args;
 
-        args.captcha = Order.generate();
-        args.errors = Order.validation(req, {name, address, email, captcha, captchaImg});
-        args.good = Order.good ? Order.insertOrder(ids, {name, address, email}) : false;
-
-        try{
+    try {
+        args.captcha = await Order.generate();
+        args.errors = await Order.validation(req, {name, address, email, captcha, captchaImg});
+        await Order.insertOrder(ids, {name, address, email}).then(async (l) =>{
+        Order.good ? args.good = l : false;
         let page = await new MyMod.Builder(true).HTML([MyMod.orderView(args)]);
         await res.writeHead(200, { 'Content-Type': 'text/html' });
         await res.end(`${page}`); 
-        }
+        });
+      }
         catch(e) {
             res.writeHead(500, { 'Content-Type': 'text/html' });
             res.end(`<h1>Server Error</h1>`);
@@ -31,7 +32,7 @@ module.exports =  class Order
 
     static async insertOrder(ids, userInfo)
     {
-      if(ids){
+      if(Order.good && ids){
        let qtyItem = {}
        let idItem = [];
        let successInsert = false;
@@ -56,18 +57,17 @@ module.exports =  class Order
                                                    'qty': qtyItem[v.id]});
                                                    userInfo.total += Number(v.price) * Number(qtyItem[v.id]).toFixed(2);
                                                   });
-            db.collection('orders').insertOne(userInfo, function(err, r) {
+            await db.collection('orders').insertOne(userInfo, function(err, r) {
               if(err) { throw new Error(err)}
-              //console.log('insertGood');
               Order.good = null;
               Mongo.close();
-              return r.insertedCount ? (successInsert = true) : false;
+              return (r.insertedCount && ids) ? true : false;
             });
           }
       });
-      return successInsert;
+      return true;
     }
-    return false;
+    else { return false;}
   }
 
     static validation(req, data)
@@ -129,8 +129,6 @@ module.exports =  class Order
       }
     
     static validateEmail(email) {
-          
-          //email = MyMod.urldecode(email);
           if (email.match("^[^s@]+@[^s@]+.[^s@]+$")==null || email.length == 0) {
             Order.errors.push("<strong>Email:</strong> Incorrect email");
           }

@@ -23,12 +23,19 @@ const server = new NodeJS.Server((req, res) => {
       MyMod.Path.get('/wishlist', 'Basket::Index', {req, res, matchURL, "class":"Wishlist"});
       MyMod.Path.get('/order', 'Order::Index', {req, res, matchURL});
       MyMod.Path.post('/order', 'Order::Index', {req, res, matchURL});
+      MyMod.Path.get('/search/@word', 'Search::Index', {req, res, matchURL});
+      MyMod.Path.get('/search/@word/@page', 'Search::Index', {req, res, matchURL});
+      MyMod.Path.post('/search/@word', 'Search::Index', {req, res, matchURL});
+      MyMod.Path.get('/list-of-orders', 'ListOfOrders->Index', {req, res, matchURL});
+      MyMod.Path.delete('/list-of-orders', 'ListOfOrders->Delete', {req, res, matchURL});
       MyMod.Path.get('/404', 'Path::notFound', {req, res, matchURL});
 
 // == Detecting incorrect paths ==
       MyMod.Path.incorrectURL(matchURL.url, res);
   }
-  catch(e) {console.error(e)}
+  catch(e) {
+    (e !== 'stop') ? console.error(e) : null;
+  }
   }
 });
 

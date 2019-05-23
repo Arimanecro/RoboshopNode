@@ -23,7 +23,6 @@ class Loader {
           }
           else {
             if(partition[1].includes('.')){
-              //console.log('DISTRUCTING!!!')
               let c = partition[1].split('.');
               this[partition[0]] = require(`${c[0]}`)[c[1]];
             }
@@ -37,9 +36,6 @@ class Loader {
           
           let p = path.resolve(partition[1]);
           if(comma.length > 1){
-            //console.log(partition[0], '---', existDestructuring);
-            //console.log('no node then 1');
-            //partition[0] = Loader.destructuring(partition[0]);
             comma.forEach(v => this[v] = require(`${p}`)[v]);
           }
           else { 
@@ -60,14 +56,13 @@ class Loader {
         }
         
       });
-    });console.log(this.partition);
+    });
   }
 
   static destructuring(string)
   {
     let start = Loader.trimByChar(string, '{');
     let end = Loader.trimByChar(start, '}');
-    //console.log('END____', end)
     return end; 
   }
 

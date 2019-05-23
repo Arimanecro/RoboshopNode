@@ -14,7 +14,7 @@ module.exports = class Path
 
     static mimeType(req, res)
     {
-        //console.log(`MIMETYPE---${req.url}`);
+
         const urlFile = NodeJS.path.resolve( 'public/' + req.url);
 
         const allowedImg = ['.png', '.jpg', '.jpeg', '.gif', '.ico', '.svg']
@@ -39,9 +39,9 @@ module.exports = class Path
             contentType = `image/${img}`;
             match = true;
         }
-
         if(match && NodeJS.fs.existsSync(urlFile))
         {
+            
             const src = NodeJS.fs.createReadStream(urlFile);
             let stat = NodeJS.fs.statSync(urlFile);
 
@@ -52,14 +52,13 @@ module.exports = class Path
             src.on('error', err => console.error(err))
             src.on('end', err => err ? console.error(err) : null);
         }
-        else { } //console.error(`Error: Unexist file --> ${urlFile}`);   
-        
     }
 
     static get(url, method, args=null)
     {
         let {req, matchURL} = args;
         if(req.method == 'GET'){
+           
                 let match = Path.match(req.url, url);
                 if(Object.keys(match).length)
                 {
@@ -78,7 +77,6 @@ module.exports = class Path
             if(Object.keys(match).length)
             {
               req.on('data', (data) => { 
-                  //console.log(NodeJS.urldecode(data.toString()));
               let POST = {};
               data = NodeJS.urldecode(data.toString()); //data.toString()
               data = data.split('&');
@@ -94,6 +92,11 @@ module.exports = class Path
         }
     }
 
+    static delete(url, method, args=null){
+        Path.post(url, method, args);
+    }
+
+
     static notFound(args)
     {
           let {res} = args;
@@ -104,7 +107,6 @@ module.exports = class Path
 
     static detectTypeOfMethod(method, args)
     {
-        
         let storage = {};
         let staticMethod = method.includes('::');
 
@@ -129,7 +131,6 @@ module.exports = class Path
         let correct = false;
 
         if(url.length === tpl.length){
-
             let urls = {};
             tpl.forEach((v,k) => {
                 if(v.includes('@')){

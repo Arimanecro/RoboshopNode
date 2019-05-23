@@ -1,12 +1,12 @@
 chunk = (arr, size) =>
-arr.reduce(
-  (chunks, el, i) =>
-    (i % size ? chunks[chunks.length - 1].push(el) : chunks.push([el])) &&
-    chunks,
-  []
-);
+  arr.reduce(
+    (chunks, el, i) =>
+      (i % size ? chunks[chunks.length - 1].push(el) : chunks.push([el])) &&
+      chunks,
+    []
+  );
 
-function displayPages(size, perPage, category=null) {
+function displayPages(size, perPage, category = null) {
   let arr = [];
   let count = Math.round(size / perPage) + 1;
   for (let i = 1; i < count; i++) {
@@ -15,15 +15,24 @@ function displayPages(size, perPage, category=null) {
   return arr;
 }
 
-module.exports.Category = (data) => {
-    data = chunk(data,4);
-    return `
+module.exports.Category = data => {
+  data = chunk(data, 4);
+  return `
     </nav><main>
-    <section id="top" class="latest title_category_items">${data[0][0]['category'].charAt(0).toUpperCase() + data[0][0]['category'].slice(1)}</section>
-    ${data.map(
+    <section id="top" class="latest title_category_items">${data[0][0][
+      "category"
+    ]
+      .charAt(0)
+      .toUpperCase() + data[0][0]["category"].slice(1)}</section>
+    ${data
+      .map(
         v1 => `<section class="latest_wrapper category_items">
-        ${v1.map(v => `<article class="latest__item">
-            <div class="latest__item__img" style="background:url(${v.img_medium.replace(/public/gi, "")}) no-repeat; background-size:contain; background-position:center;"></div>
+        ${v1.map(
+          v => `<article class="latest__item">
+            <div class="latest__item__img" style="background:url(${v.img_medium.replace(
+              /public/gi,
+              ""
+            )}) no-repeat; background-size:contain; background-position:center;"></div>
            <div class="item__price">${v.price}</div>
            <a href="/item/${v.url}">
            <div class="latest__item__desc">${v.title}</div></a>
@@ -37,15 +46,17 @@ module.exports.Category = (data) => {
                 <input name="add_basket" type="submit" class="add_basket" value="" >
                 <input name="add_wish" type="submit" class="add_wish" value="" >
             </form>
-        </article>`)}
+        </article>`
+        )}
        </section>
-    `).join('')}
+    `
+      )
+      .join("")}
       <div class="paginator">
         <ul>
-          ${displayPages(32, 16, data[0][0]['category']).map(v => v)}
+          ${displayPages(32, 16, data[0][0]["category"]).map(v => v)}
         </ul>
       </div>
     <section class="latest_wrapper bestsellers_wraper latest_featured" style="display:block;margin-bottom: 330px;"></section>
-    `.replace(/[, ]+/g, ' ');
-}
-
+    `.replace(/[, ]+/g, " ");
+};

@@ -1,4 +1,4 @@
-module.exports = (name) =>  `
+module.exports = name => `
 <section class="latest title_category_items basket_items">${name}</section>
 <div class="application__content"></div>
 <section class="wish_list">

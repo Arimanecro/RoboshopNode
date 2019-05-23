@@ -55,7 +55,6 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="65" height="75">
                         <image xlink:href="../img/logo.svg" src="../img/logo.svg" width="55" height="75"/>
                     </svg>
-                    <!-- <object width="65" height="75" data="../img/logo.svg" type="image/svg+xml"></object> -->
                     <figcaption>
                         <p>Robo</p>
                         <p>online store</p>
@@ -74,10 +73,14 @@
                 </figure>
             </section>
             <section class="header__search">
-                <form method="get" action="search">
-                    <input name="word" type="search" id="search">
+                <form method="post" action="search/nothing" id="search">
+                    <input name="word" type="search" id='word' value=''>
                     <label for="search_btn"><input id="search_btn" type="submit" value=""></label>
                 </form>
+                <script>
+                let form = document.getElementById('search');
+                document.getElementById('word').addEventListener('input',(e) => form.setAttribute('action', `search/${e.target.value}`))
+                </script>
             </section>
             <section class="phone"><span>111-222-333</span></section>
         </header>
